@@ -30,8 +30,8 @@ graph LR
     App -- "1. Get Query Stats" --> PiHole
     App -- "2. Block/Unblock Client" --> PiHole
 
-    style App fill:#f9f,stroke:#333,stroke-width:2px
-    style PiHole fill:#bbf,stroke:#333,stroke-width:2px
+    style App fill:#f6f6f6,stroke:#333,stroke-width:2px
+    style PiHole fill:#f6f6f6,stroke:#333,stroke-width:2px
 ```
 
 ## Requirements
