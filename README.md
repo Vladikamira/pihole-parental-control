@@ -6,9 +6,11 @@ The Apple TV doesn't have a way to properly block YouTube based on time watched.
 ## Idea
 Go service that:
 - Periodically checks statistics.
-- Checks every 1 minute for YouTube related queries.
+- Checks every 1 minute for YouTube (or any other service) related queries.
 - If the counter is greater than the limit -> block the client.
 - Resets the counter at midnight.
+
+Domains for other services/web sites can be found here: https://github.com/v2fly/domain-list-community/blob/master/data
 
 ## Requirements
 
