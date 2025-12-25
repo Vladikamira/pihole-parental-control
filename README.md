@@ -10,6 +10,10 @@ Go service that:
 - If the counter is greater than the limit -> block the client.
 - Resets the counter at midnight.
 
+## Requirements
+
+- **Pi-hole v6 or newer**: This application relies on the new API introduced in Pi-hole v6. It will **not work** with Pi-hole v5.x.
+
 ## Usage
 
 ### Configuration
@@ -59,13 +63,26 @@ Create a `docker-compose.yml` file:
 
 ```yaml
 services:
+  pihole:
+    image: pihole/pihole:development-v6
+    container_name: pihole
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80/tcp"
+    environment:
+      - FTLCONF_webserver_api_password=your_secret_password
+    restart: unless-stopped
+
   parental-control:
     image: vladikamira/pihole-parental-control:latest
     container_name: pihole-parental-control
     restart: unless-stopped
+    depends_on:
+      - pihole
     environment:
-      - PIHOLE_ADDRESS=http://192.168.1.10
-      - PIHOLE_PASSWORD=your_password
+      - PIHOLE_ADDRESS=http://pihole:80
+      - PIHOLE_PASSWORD=your_secret_password # Must match FTLCONF_webserver_api_password
       - TELEGRAM_BOT_TOKEN=your_bot_token
       - TELEGRAM_CHAT_ID=your_chat_id
       - DAYLY_WATCHING_LIMIT=2h
