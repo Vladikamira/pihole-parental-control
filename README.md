@@ -12,6 +12,27 @@ Go service that:
 
 Domains for other services/web sites can be found here: https://github.com/v2fly/domain-list-community/blob/master/data
 
+## How it works
+
+1. **Client Setup**: Devices (like an Apple TV or iPad) must have their DNS settings manually configured to point to the Pi-hole IP address. This ensures all internet requests go through Pi-hole first.
+2. **Monitoring**: The `pihole-parental-control` service connects to the Pi-hole API (v6) and periodically checks the query logs for specific domains (e.g., YouTube).
+3. **Enforcement**:
+   - It calculates the total time spent watching based on query frequency.
+   - Once the configured limit (e.g., 2 hours) is reached, the service instructs Pi-hole to **block** those domains for that specific client.
+   - At midnight, the counter resets, and domains are unblocked automatically.
+
+```mermaid
+graph TD
+    Client(Apple TV / Device) -- DNS Queries --> PiHole[Pi-hole v6]
+    PiHole -- Replies --> Client
+    
+    subgraph Parental Control
+    App[pihole-parental-control] -- 1. Polls Stats --> PiHole
+    App -- 2. Checks Limit --> App
+    App -- 3. Blocks/Unblocks --> PiHole
+    end
+```
+
 ## Requirements
 
 - **Pi-hole v6 or newer**: This application relies on the new API introduced in Pi-hole v6. It will **not work** with Pi-hole v5.x.

@@ -20,7 +20,6 @@ func NewConfig() Config {
 		PiholeAddress:      os.Getenv("PIHOLE_ADDRESS"),
 		CheckInternal:      parseDurationEnv("CHECK_INTERNAL", 1*time.Minute),
 		DaylyWatchingLimit: parseDurationEnv("DAYLY_WATCHING_LIMIT", 1*time.Hour),
-		// https://github.com/v2fly/domain-list-community/blob/master/data/youtube
 		DomainsToCheck: []string{
 			"*youtube*",
 			"*googlevideo*",
