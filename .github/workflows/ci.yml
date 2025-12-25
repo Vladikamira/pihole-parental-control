@@ -51,7 +51,7 @@ jobs:
           vladikamira/pihole-parental-control:${{ github.ref_name }}
 
     - name: Create Release
-      uses: softprops/action-gh-release@v3
+      uses: softprops/action-gh-release@v2
       with:
         generate_release_notes: true
 
