@@ -22,15 +22,16 @@ Domains for other services/web sites can be found here: https://github.com/v2fly
    - At midnight, the counter resets, and domains are unblocked automatically.
 
 ```mermaid
-graph TD
-    Client(Apple TV / Device) -- DNS Queries --> PiHole[Pi-hole v6]
-    PiHole -- Replies --> Client
+graph LR
+    Client("Client Device<br>(e.g. Apple TV)") -- "DNS Queries" --> PiHole("Pi-hole v6")
     
-    subgraph Parental Control
-    App[pihole-parental-control] -- 1. Polls Stats --> PiHole
-    App -- 2. Checks Limit --> App
-    App -- 3. Blocks/Unblocks --> PiHole
-    end
+    App("Parental Control Service")
+
+    App -- "1. Get Query Stats" --> PiHole
+    App -- "2. Block/Unblock Client" --> PiHole
+
+    style App fill:#f9f,stroke:#333,stroke-width:2px
+    style PiHole fill:#bbf,stroke:#333,stroke-width:2px
 ```
 
 ## Requirements
