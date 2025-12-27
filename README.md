@@ -21,6 +21,9 @@ Domains for other services/web sites can be found here: https://github.com/v2fly
    - Once the configured limit (e.g., 2 hours) is reached, the service instructs Pi-hole to **block** those domains for that specific client.
    - At midnight, the counter resets, and domains are unblocked automatically.
 
+> [!IMPORTANT]
+> **Disclaimer**: Since this application works based on counting DNS requests, measurements may not be perfectly accurate. Factors like DNS caching, background activity, or pre-fetching can affect the results.
+
 ```mermaid
 graph LR
     Client("Client Device<br>(e.g. Apple TV)") -- "DNS Queries" --> PiHole("Pi-hole v6")
