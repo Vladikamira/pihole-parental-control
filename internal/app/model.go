@@ -5,6 +5,7 @@ import (
 
 	"github.com/vladikamira/pihole-parental-control/internal/config"
 	"github.com/vladikamira/pihole-parental-control/internal/pihole"
+	"github.com/vladikamira/pihole-parental-control/internal/speaker"
 	"github.com/vladikamira/pihole-parental-control/internal/telegram"
 )
 
@@ -15,10 +16,11 @@ type WatchIntervals struct {
 }
 
 type App struct {
-	cfg      config.Config
-	client   *pihole.Client
-	tgClient *telegram.Client
-	stats    DomainStats
+	cfg           config.Config
+	client        *pihole.Client
+	tgClient      *telegram.Client
+	speakerClient *speaker.Client
+	stats         DomainStats
 }
 
 type Client struct {

@@ -8,6 +8,7 @@ import (
 
 	"github.com/vladikamira/pihole-parental-control/internal/config"
 	"github.com/vladikamira/pihole-parental-control/internal/pihole"
+	"github.com/vladikamira/pihole-parental-control/internal/speaker"
 	"github.com/vladikamira/pihole-parental-control/internal/telegram"
 )
 
@@ -15,7 +16,7 @@ func NewApp() *App {
 	cfg := config.NewConfig()
 	client := pihole.NewClient(cfg)
 	tgClient := telegram.NewClient(cfg)
-	_ = tgClient
+	speakerClient := speaker.NewClient(cfg)
 
 	stats := DomainStats{
 		Domains:     cfg.DomainsToCheck,
@@ -23,10 +24,11 @@ func NewApp() *App {
 	}
 
 	return &App{
-		cfg:      cfg,
-		client:   client,
-		tgClient: tgClient,
-		stats:    stats,
+		cfg:           cfg,
+		client:        client,
+		tgClient:      tgClient,
+		speakerClient: speakerClient,
+		stats:         stats,
 	}
 }
 
@@ -48,6 +50,7 @@ func (a *App) Run() {
 			if !client.Blocked && !client.NotifiedNearLimit && remaining <= 5*time.Minute && remaining > 0 {
 				fmt.Printf("Client %s has less than 5 minutes left. Sending notification...\n", client.IP)
 				a.tgClient.SendMessage(fmt.Sprintf("Client %s has less than 5 minutes left (%v)", client.IP, remaining.Round(time.Minute)))
+				a.speakerClient.Speak(a.cfg.NearLimitMessage)
 				client.NotifiedNearLimit = true
 			}
 
@@ -60,6 +63,7 @@ func (a *App) Run() {
 				} else {
 					client.Blocked = true
 					a.tgClient.SendMessage(fmt.Sprintf("Client %s reached limit %s and is now blocked", client.IP, a.cfg.DaylyWatchingLimit))
+					a.speakerClient.Speak(a.cfg.LimitReachedMessage)
 				}
 			}
 		}

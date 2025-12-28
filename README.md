@@ -8,6 +8,7 @@ Go service that:
 - Periodically checks statistics.
 - Checks every 1 minute for YouTube (or any other service) related queries.
 - If the counter is greater than the limit -> block the client.
+- Sends voice notifications via [simple-google-speaker](https://github.com/Vladikamira/simple-google-speaker) when the limit is approaching and when it's reached.
 - Resets the counter at midnight.
 
 Domains for other services/web sites can be found here: https://github.com/v2fly/domain-list-community/blob/master/data
@@ -19,6 +20,7 @@ Domains for other services/web sites can be found here: https://github.com/v2fly
 3. **Enforcement**:
    - It calculates the total time spent watching based on query frequency.
    - Once the configured limit (e.g., 2 hours) is reached, the service instructs Pi-hole to **block** those domains for that specific client.
+   - It also triggers a voice message on Google Cast devices via the `simple-google-speaker` service.
    - At midnight, the counter resets, and domains are unblocked automatically.
 
 > [!IMPORTANT]
@@ -54,6 +56,10 @@ The application is configured via environment variables:
 | `TELEGRAM_BOT_TOKEN` | Telegram Bot Token for notifications | `123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11` |
 | `TELEGRAM_CHAT_ID` | Chat ID where notifications will be sent | `123456789` |
 | `DAYLY_WATCHING_LIMIT` | Daily watching limit (default: 1h) | `2h`, `1h30m` |
+| `SPEAKER_URL` | URL of the `simple-google-speaker` service | `http://192.168.1.50:8080` |
+| `SPEAKER_LANGUAGE` | Language for voice messages (default: `en`) | `ru`, `en` |
+| `SPEAKER_NEAR_LIMIT_MESSAGE` | Voice message when < 5 mins left | `Wrap it up.` |
+| `SPEAKER_LIMIT_REACHED_MESSAGE` | Voice message when limit reached | `Time is up.` |
 
 ### Run via Go
 

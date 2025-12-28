@@ -6,13 +6,17 @@ import (
 )
 
 type Config struct {
-	PiholeAddress      string
-	CheckInternal      time.Duration
-	DaylyWatchingLimit time.Duration
-	DomainsToCheck     []string
-	Password           string
-	TelegramToken      string
-	TelegramChatID     string
+	PiholeAddress       string
+	CheckInternal       time.Duration
+	DaylyWatchingLimit  time.Duration
+	DomainsToCheck      []string
+	Password            string
+	TelegramToken       string
+	TelegramChatID      string
+	SpeakerURL          string
+	SpeakerLanguage     string
+	NearLimitMessage    string
+	LimitReachedMessage string
 }
 
 func NewConfig() Config {
@@ -29,10 +33,21 @@ func NewConfig() Config {
 			"*.ytimg.com",
 			"*googleusercontent.com",
 		},
-		Password:       os.Getenv("PIHOLE_PASSWORD"),
-		TelegramToken:  os.Getenv("TELEGRAM_BOT_TOKEN"),
-		TelegramChatID: os.Getenv("TELEGRAM_CHAT_ID"),
+		Password:            os.Getenv("PIHOLE_PASSWORD"),
+		TelegramToken:       os.Getenv("TELEGRAM_BOT_TOKEN"),
+		TelegramChatID:      os.Getenv("TELEGRAM_CHAT_ID"),
+		SpeakerURL:          os.Getenv("SPEAKER_URL"), // e.g. http://192.168.1.50:8080
+		SpeakerLanguage:     getEnv("SPEAKER_LANGUAGE", "en"),
+		NearLimitMessage:    getEnv("SPEAKER_NEAR_LIMIT_MESSAGE", "Less than five minutes remaining. Wrap it up."),
+		LimitReachedMessage: getEnv("SPEAKER_LIMIT_REACHED_MESSAGE", "Time's up. Viewing is now blocked."),
 	}
+}
+
+func getEnv(key, fallback string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return fallback
 }
 
 func parseDurationEnv(key string, defaultDuration time.Duration) time.Duration {
