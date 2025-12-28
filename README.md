@@ -71,6 +71,7 @@ export PIHOLE_PASSWORD="your_password"
 export TELEGRAM_BOT_TOKEN="your_bot_token"
 export TELEGRAM_CHAT_ID="your_chat_id"
 export DAYLY_WATCHING_LIMIT="1h"
+export SPEAKER_URL="http://192.168.1.50:8080"
 
 go run cmd/main.go
 ```
@@ -119,6 +120,8 @@ services:
       - TELEGRAM_BOT_TOKEN=your_bot_token
       - TELEGRAM_CHAT_ID=your_chat_id
       - DAYLY_WATCHING_LIMIT=2h
+      - SPEAKER_URL=http://192.168.1.50:8080
+      - SPEAKER_LANGUAGE=en
 ```
 
 Then run:

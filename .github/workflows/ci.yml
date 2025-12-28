@@ -46,6 +46,7 @@ jobs:
       with:
         context: .
         push: true
+        platforms: linux/amd64,linux/arm64
         tags: |
           vladikamira/pihole-parental-control:latest
           vladikamira/pihole-parental-control:${{ github.ref_name }}
