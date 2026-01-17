@@ -55,7 +55,7 @@ func (c *Client) Speak(message string) error {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusAccepted {
 		return fmt.Errorf("speaker service returned status: %s", resp.Status)
 	}
 
