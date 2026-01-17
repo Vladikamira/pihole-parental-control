@@ -50,7 +50,10 @@ func (a *App) Run() {
 			if !client.Blocked && !client.NotifiedNearLimit && remaining <= 5*time.Minute && remaining > 0 {
 				fmt.Printf("Client %s has less than 5 minutes left. Sending notification...\n", client.IP)
 				a.tgClient.SendMessage(fmt.Sprintf("Client %s has less than 5 minutes left (%v)", client.IP, remaining.Round(time.Minute)))
-				a.speakerClient.Speak(a.cfg.NearLimitMessage)
+				err := a.speakerClient.Speak(a.cfg.NearLimitMessage)
+				if err != nil {
+					fmt.Printf("Failed to speak near limit message: %v\n", err)
+				}
 				client.NotifiedNearLimit = true
 			}
 
@@ -63,7 +66,10 @@ func (a *App) Run() {
 				} else {
 					client.Blocked = true
 					a.tgClient.SendMessage(fmt.Sprintf("Client %s reached limit %s and is now blocked", client.IP, a.cfg.DaylyWatchingLimit))
-					a.speakerClient.Speak(a.cfg.LimitReachedMessage)
+					err := a.speakerClient.Speak(a.cfg.LimitReachedMessage)
+					if err != nil {
+						fmt.Printf("Failed to speak limit reached message: %v\n", err)
+					}
 				}
 			}
 		}
