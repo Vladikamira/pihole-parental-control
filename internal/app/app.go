@@ -33,12 +33,14 @@ func NewApp() *App {
 }
 
 func (a *App) Run() {
-
+	a.StartServer()
 	fmt.Printf("Starting app with config: %v\n", a.cfg)
 
 	for {
+		a.mu.Lock()
 		if err := checkDomains(a.client, &a.stats); err != nil {
 			fmt.Printf("Failed to check domains: %v\n", err)
+			a.mu.Unlock()
 			continue
 		}
 
@@ -73,9 +75,10 @@ func (a *App) Run() {
 				}
 			}
 		}
+		a.mu.Unlock()
 
 		if time.Now().After(midnight()) && time.Now().Before(midnight().Add(a.cfg.CheckInternal)) {
-
+			a.mu.Lock()
 			// Unblock all clients
 			for _, client := range a.stats.Clients {
 				if client.Blocked {
@@ -90,6 +93,7 @@ func (a *App) Run() {
 				}
 			}
 			resetStats(&a.stats)
+			a.mu.Unlock()
 		}
 		time.Sleep(a.cfg.CheckInternal)
 	}
@@ -105,6 +109,10 @@ func checkDomains(client *pihole.Client, stats *DomainStats) error {
 		}
 
 		stats.GlobalCount += len(queryStats.Queries)
+
+		if len(queryStats.Queries) == 0 {
+			continue
+		}
 
 		// Sort queries by time to ensure chronological processing
 		sort.Slice(queryStats.Queries, func(i, j int) bool {
@@ -202,9 +210,13 @@ func midnight() time.Time {
 
 func resetStats(stats *DomainStats) {
 	for _, client := range stats.Clients {
-		client.RequestsToday = 0
-		client.TimeWatchedToday = 0
-		client.WatchIntervals = nil
-		client.NotifiedNearLimit = false
+		resetClientStats(client)
 	}
+}
+
+func resetClientStats(client *Client) {
+	client.RequestsToday = 0
+	client.TimeWatchedToday = 0
+	client.WatchIntervals = nil
+	client.NotifiedNearLimit = false
 }

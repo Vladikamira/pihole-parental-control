@@ -1,6 +1,7 @@
 package app
 
 import (
+	"sync"
 	"time"
 
 	"github.com/vladikamira/pihole-parental-control/internal/config"
@@ -21,6 +22,7 @@ type App struct {
 	tgClient      *telegram.Client
 	speakerClient *speaker.Client
 	stats         DomainStats
+	mu            sync.RWMutex
 }
 
 type Client struct {

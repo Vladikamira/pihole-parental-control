@@ -60,6 +60,7 @@ The application is configured via environment variables:
 | `SPEAKER_LANGUAGE` | Language for voice messages (default: `en`) | `ru`, `en` |
 | `SPEAKER_NEAR_LIMIT_MESSAGE` | Voice message when < 5 mins left | `Wrap it up.` |
 | `SPEAKER_LIMIT_REACHED_MESSAGE` | Voice message when limit reached | `Time is up.` |
+| `API_PORT` | Port for the API server (default: `8081`) | `8081` |
 
 ### Run via Go
 
@@ -129,3 +130,25 @@ Then run:
 ```bash
 docker compose up -d
 ```
+
+### API
+
+The service exposes a simple HTTP API for manual control.
+
+#### Reset Client Statistics and Unblock
+
+To manually reset a client's daily statistics and unblock them in Pi-hole:
+
+```bash
+curl -X POST "http://localhost:8081/reset?ip=192.168.1.15"
+```
+
+- **URL**: `/reset`
+- **Method**: `POST`
+- **Query Parameters**:
+  - `ip`: The IP address of the client to reset and unblock.
+- **Success Response**: `200 OK`
+- **Error Responses**:
+  - `400 Bad Request`: Missing `ip` parameter.
+  - `404 Not Found`: Client not found in current statistics.
+  - `500 Internal Server Error`: Failed to communicate with Pi-hole.

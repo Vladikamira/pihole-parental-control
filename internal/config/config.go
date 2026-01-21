@@ -17,6 +17,7 @@ type Config struct {
 	SpeakerLanguage     string
 	NearLimitMessage    string
 	LimitReachedMessage string
+	ApiPort             string
 }
 
 func NewConfig() Config {
@@ -40,6 +41,7 @@ func NewConfig() Config {
 		SpeakerLanguage:     getEnv("SPEAKER_LANGUAGE", "en"),
 		NearLimitMessage:    getEnv("SPEAKER_NEAR_LIMIT_MESSAGE", "Less than five minutes remaining. Wrap it up."),
 		LimitReachedMessage: getEnv("SPEAKER_LIMIT_REACHED_MESSAGE", "Time's up. Viewing is now blocked."),
+		ApiPort:             getEnv("API_PORT", "8081"),
 	}
 }
 
