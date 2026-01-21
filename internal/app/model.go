@@ -11,9 +11,9 @@ import (
 )
 
 type WatchIntervals struct {
-	Start    time.Time
-	End      time.Time
-	Requests int
+	Start    time.Time `json:"start"`
+	End      time.Time `json:"end"`
+	Requests int       `json:"requests"`
 }
 
 type App struct {
@@ -26,17 +26,17 @@ type App struct {
 }
 
 type Client struct {
-	RequestsToday     int
-	IP                string
-	TimeWatchedToday  time.Duration
-	WatchIntervals    []WatchIntervals
-	LastQueryTime     time.Time
-	Blocked           bool
-	NotifiedNearLimit bool
+	RequestsToday     int              `json:"requests_today"`
+	IP                string           `json:"ip"`
+	TimeWatchedToday  time.Duration    `json:"time_watched_today"`
+	WatchIntervals    []WatchIntervals `json:"watch_intervals"`
+	LastQueryTime     time.Time        `json:"last_query_time"`
+	Blocked           bool             `json:"blocked"`
+	NotifiedNearLimit bool             `json:"notified_near_limit"`
 }
 
 type DomainStats struct {
-	Domains     []string `json:"domain"`
-	GlobalCount int      `json:"count"`
-	Clients     []*Client
+	Domains     []string  `json:"domains"`
+	GlobalCount int       `json:"global_count"`
+	Clients     []*Client `json:"clients"`
 }

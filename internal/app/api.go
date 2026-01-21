@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -9,6 +10,7 @@ import (
 func (a *App) StartServer() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/reset", a.handleReset)
+	mux.HandleFunc("/stats", a.handleStats)
 
 	fmt.Printf("Starting API server on port %s\n", a.cfg.ApiPort)
 	go func() {
@@ -64,4 +66,19 @@ func (a *App) handleReset(w http.ResponseWriter, r *http.Request) {
 	targetClient.Blocked = false
 
 	fmt.Fprintf(w, "Successfully reset stats and unblocked client %s\n", ip)
+}
+
+func (a *App) handleStats(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	a.mu.RLock()
+	defer a.mu.RUnlock()
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(a.stats); err != nil {
+		fmt.Printf("API: Failed to encode stats: %v\n", err)
+	}
 }

@@ -152,3 +152,15 @@ curl -X POST "http://localhost:8081/reset?ip=192.168.1.15"
   - `400 Bad Request`: Missing `ip` parameter.
   - `404 Not Found`: Client not found in current statistics.
   - `500 Internal Server Error`: Failed to communicate with Pi-hole.
+
+#### Get Current Statistics
+
+To view current monitoring statistics:
+
+```bash
+curl "http://localhost:8081/stats"
+```
+
+- **URL**: `/stats`
+- **Method**: `GET`
+- **Success Response**: `200 OK` with JSON body containing monitored domains, global counter, and per-client data (IP, time watched, blocked status, etc.).
